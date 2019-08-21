@@ -4,7 +4,7 @@ The fork has been changed for being utilized by generating a corpus for [YongWoo
 
 `download_list.py` and `download_files.py` are almost unchanged. You can build your own BookCorpus by yourself thanks to soskek's work.
 
-`make_sentlines.py` and `tokenization.py` is the main difference from the origin. It makes a corpus for **Next Sentence Prediction** task. Your corpus will be formatted as two sentences in one line with tab(\t) separator. The expected format of corpus is shown below.
+`make_sentlines.py` and `tokenization.py` is the main difference from the origin. It makes a corpus for **Next Sentence Prediction** task. Your corpus will be formatted as two sentences in one line with tab(\t) separator. The expected format of the corpus is shown below.
 
 ```
 the great one himself, ronald mcdonald! \t he is an inspiration to clowns everywhere.\n
