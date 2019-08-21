@@ -33,24 +33,27 @@ def convert_into_sentences(lines):
         n_sent += len(sents)
     return sent_L, n_sent
 
-def concat_sentence(sent_a, sent_b, clean=True):
-    if clean:
-        sent_a = convert_to_unicode(sent_a)
-        sent_b = convert_to_unicode(sent_b)
-        sent_a = _clean_text(sent_a.lower())
-        sent_b = _clean_text(sent_b.lower())
-    return sent_a + '\t' + sent_b + '\n'
-
 if __name__ == "__main__":
-
     file_list = list(sorted(glob(os.path.join(file_dir, '*.txt'))))
     out = open(save_dir, 'w', encoding='utf8')
 
     for i, file_path in enumerate(file_list):
         sents, n_sent = convert_into_sentences(open(file_path, encoding='utf8').readlines())
-        sent_left = sents[0::2]
-        sent_right = sents[1::2]
-        for x in list(zip(sent_left, sent_right[:len(sent_left)])):
-            out.write(concat_sentence(*x))
+
+        sent_a = ''
+        for sent in sents:
+            sent = convert_to_unicode(sent)
+            sent = _clean_text(sent.lower())
+            if len(sent) < 35:
+                sent_a = ''
+                continue
+            elif sent_a:
+                sent_b = sent
+                out.write(sent_a + '\t' + sent_b + '\n')
+                sent_a = ''
+            else:
+                sent_a = sent
+
         sys.stderr.write(
             '{}/{}\t{}\t{}\n'.format(i, len(file_list), n_sent, file_path))
+    out.close()

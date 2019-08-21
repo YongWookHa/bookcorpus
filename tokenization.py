@@ -31,13 +31,21 @@ def convert_to_unicode(text):
     else:
         raise ValueError("Not running on Python2 or Python 3?")
 
+
 def _clean_text(text):
     """Performs invalid character removal and whitespace cleanup on text."""
     output = []
-    invalid_char = re.compile("[^a-zA-Z|\d|.|?|!|~| ]")
-    for char in text:
+    chapter_pattern = re.compile("chapter ?\d+")
+    text = re.sub(chapter_pattern, '', text)
+    invalid_char = re.compile("[^a-zA-Z|\d|.|?|!|~|'|,| ]")
+    for i, char in enumerate(text):
         cp = ord(char)
         if cp == 0 or cp == 0xfffd or _is_control(char):
+            continue
+        if char == '’':  # replace
+            char = '\'' 
+        if char in [':', '-', '–'] and i < 15:
+            output = []
             continue
         if invalid_char.match(char):
             continue
@@ -45,7 +53,7 @@ def _clean_text(text):
             output.append(" ")
         else:
             output.append(char)
-    return "".join(output)
+    return "".join(output).strip()
 
 def _is_whitespace(char):
     """Checks whether `chars` is a whitespace character."""
